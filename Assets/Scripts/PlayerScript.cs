@@ -7,11 +7,12 @@ using TMPro;
 public class PlayerScript : MonoBehaviour
 {
     private Rigidbody2D rd2d;
-
+    private bool facingRight = true;
     public AudioSource musicSource;
-
     public AudioClip musicClipOne;
     public AudioClip musicClipTwo;
+
+    Animator anim;
 
     public float speed;
     public Text score;
@@ -38,12 +39,46 @@ public class PlayerScript : MonoBehaviour
         musicSource.clip = musicClipOne;
         musicSource.Play();
         musicSource.loop = true;
+        anim = GetComponent<Animator>();
     
     }
     
     void SetLivesText()
     {
         lives.text = "Lives:" + livesValue.ToString();
+    }
+
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.W))
+        {
+            anim.SetInteger("State", 1);
+        }
+
+        if (Input.GetKeyUp(KeyCode.W))
+        {
+            anim.SetInteger("State", 0);
+        }
+
+         if (Input.GetKeyDown(KeyCode.A))
+        {
+            anim.SetInteger("State", 1);
+        }
+
+        if (Input.GetKeyUp(KeyCode.A))
+        {
+            anim.SetInteger("State", 0);
+        }
+
+         if (Input.GetKeyDown(KeyCode.D))
+        {
+            anim.SetInteger("State", 1);
+        }
+
+        if (Input.GetKeyUp(KeyCode.D))
+        {
+            anim.SetInteger("State", 0);
+        }
     }
     // Update is called once per frame
     void FixedUpdate()
@@ -62,8 +97,25 @@ public class PlayerScript : MonoBehaviour
             loseText.SetActive(true);
             Destroy(gameObject);
         }
+
+        if (facingRight == false && hozMovement > 0)
+        {
+             Flip();
+        }
+        else if (facingRight == true && hozMovement < 0)
+        {
+            Flip();
+        }
         
     }
+
+    void Flip()
+   {
+     facingRight = !facingRight;
+     Vector2 Scaler = transform.localScale;
+     Scaler.x = Scaler.x * -1;
+     transform.localScale = Scaler;
+   }
 
     
 
@@ -87,6 +139,11 @@ public class PlayerScript : MonoBehaviour
                 musicSource.clip = musicClipTwo;
                 musicSource.Play();
             }
+
+            if(scoreValue == 4)
+            {
+            transform.position = new Vector2(63.56f, -0.26f);
+            }
             
     
         }   
@@ -98,10 +155,6 @@ public class PlayerScript : MonoBehaviour
             Destroy(collision.collider.gameObject);
         }
         
-        if(scoreValue == 4)
-        {
-            transform.position = new Vector2(63.56f, -0.26f);
-        }
     }
     
 
